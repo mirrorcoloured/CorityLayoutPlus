@@ -1,10 +1,3 @@
-/*
-ColorCorityFields
-Sky Chrastina (paul.chrastina@arcadis.com)
-v 1.3
-2020.06.18
-*/
-
 console.log("[CorityLayout+]","Running...")
 for (let tdcell of document.getElementsByClassName('field_cell')) {
     if (tdcell.children.length > 0) {
