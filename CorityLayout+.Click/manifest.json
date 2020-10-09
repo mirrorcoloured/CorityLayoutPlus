@@ -1,7 +1,7 @@
 {
     "name": "CorityLayout+",
     "description": "Makes the Cority layout editor easier to use by adding CSS styling and detecting metadata",
-    "version": "1.3.3",
+    "version": "1.4.0",
     "author": "Sky Chrastina",
     "icons": {
 		"16": "icon16.png",

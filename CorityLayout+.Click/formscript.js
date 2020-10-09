@@ -1,0 +1,36 @@
+console.log("[CorityLayout+]","Running...")
+
+for (let titlecell of document.getElementsByClassName('titlecell')) {
+    if (titlecell.children.length > 0) {
+        addPropertyName(titlecell);
+    }
+}
+
+function addPropertyName(titlecell) {
+    const label = getElementByXpath(".//label", titlecell);
+
+    xPathResult = document.evaluate('//*[@id="searchInput"]', document);
+    if(xPathResult){
+        element = xPathResult.iterateNext();
+    }
+
+    let original_label = label.innerHTML;
+    if (label.getAttribute("CL-original")) {
+        original_label = label.getAttribute("CL-original");
+    } else {
+        label.setAttribute("CL-original", original_label);
+    }
+    const base_text = label.getAttribute("basetext");
+    const property_name = label.getAttribute("for");
+
+    label.innerHTML = 
+    `${original_label}
+    <br>
+    <font style="color: red;">[${base_text}]</font>
+    <br>
+    <font style="color: blue;">[${property_name}]</font>`;
+}
+
+function getElementByXpath(path, context=document) {
+    return document.evaluate(path, context, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+  }  
