@@ -72,7 +72,9 @@ function colorCell(tdcell) {
 
     // Modify color by class
     if (divtile.classList.contains('disabled')) {
-        divtile.style.backgroundColor = '#7c7c7c';
+        divtile.style.backgroundColor = '#dcdcdc';
+        divtile.style.opacity = 0.95;
+        divtile.style.padding = 0;
     }
     if (divtile.classList.contains('required') ||
         divtile.classList.contains('system')) {
@@ -101,7 +103,7 @@ function resizeTile(tdcell) {
     label.style.pointerEvents = "none";
 
     // Resize
-    divtile.style.height = "50px";
+    divtile.style.height = "60px";
     divtile.style.width = "100%";
 
     label.style.display = "inline-block";
@@ -120,8 +122,14 @@ function modifyName(tdcell) {
     }
     let newName = label.getAttribute('labelname');
     const typename = getFieldType(tdcell);
+    const origname = divtile.getAttribute("title");
 
-    label.innerHTML = `${newName}<br><i>${baseName}</i><br>${typename}`;
+    // if (newName == origname || baseName == origname) {
+    //     label.innerHTML = `${newName}<br><br><i>${baseName}</i><br>${typename}`;
+    // } else {
+        label.innerHTML = `${newName}<br><i>${origname}</i><br><i>${baseName}</i><br>${typename}`;
+    // }
+
 
     if (typename == "Lookup") {
         const divtileid = divtile.getAttribute("id");

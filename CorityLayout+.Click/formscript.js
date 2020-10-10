@@ -9,11 +9,6 @@ for (let titlecell of document.getElementsByClassName('titlecell')) {
 function addPropertyName(titlecell) {
     const label = getElementByXpath(".//label", titlecell);
 
-    xPathResult = document.evaluate('//*[@id="searchInput"]', document);
-    if(xPathResult){
-        element = xPathResult.iterateNext();
-    }
-
     let original_label = label.innerHTML;
     if (label.getAttribute("CL-original")) {
         original_label = label.getAttribute("CL-original");
@@ -26,11 +21,15 @@ function addPropertyName(titlecell) {
     label.innerHTML = 
     `${original_label}
     <br>
-    <font style="color: red;">[${base_text}]</font>
+    <span style="font-size:12px;">
+    <span style="color: red;">[${base_text}]</span>
     <br>
-    <font style="color: blue;">[${property_name}]</font>`;
+    <span style="color: blue;">[${property_name}]</span>
+    </span>
+    `
+    ;
 }
 
 function getElementByXpath(path, context=document) {
     return document.evaluate(path, context, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-  }  
+}
