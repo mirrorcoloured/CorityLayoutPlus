@@ -161,7 +161,10 @@ function translateEntity(parententity, entity) {
     // TODO find better way of getting this info
 
     const translations = {
+        "createdby": "User",
+        "modifiedby": "User",
         // safetyincident
+        "accidentcause": "IncidentRootCause",
         "job": {"safetyincident": "SafetyRASJobList"},
         "locationtype": "AccidentLocation",
         "primarycategory": "GeneralIncidentCategory",
@@ -179,6 +182,8 @@ function translateEntity(parententity, entity) {
         "findingowner": "Employee",
         "topic": "AuditTopic",
         "severity": "HazardSeverityRating",
+        // risk
+        "workflow": "WorkflowStatus",
     }
 
     if (Object.keys(translations).includes(entity)) {
