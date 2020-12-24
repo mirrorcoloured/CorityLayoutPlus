@@ -9,7 +9,7 @@ chrome.extension.sendMessage({ cmd: "get_IsEnabled", }, function (response) {
     }
 });
 
-chkbox.addEventListener("input", function() {
+chkbox.addEventListener("input", function () {
     chrome.extension.sendMessage({
         cmd: "set_IsEnabled",
         data: {
@@ -21,16 +21,26 @@ chkbox.addEventListener("input", function() {
         toast.classList.remove("hidden");
     }
 
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        let activeTab = tabs[0];
-        if (activeTab.url.indexOf("layout.rails") > -1) {
-            if (chkbox.checked) {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        if (chkbox.checked) {
+            let activeTab = tabs[0];
+            // if (activeTab.url.indexOf("layout.rails") > -1) {
+            //     chrome.tabs.executeScript(activeTab.id, {
+            //         file: "contentscript.js",
+            //     });
+            // }
+            if (activeTab.url.indexOf("layout.rails") > -1) {
                 chrome.tabs.executeScript(activeTab.id, {
-                    file: "contentscript.js",
+                    file: "layoutscript.js",
+                });
+            } else {
+                chrome.tabs.executeScript(activeTab.id, {
+                    file: "formscript.js",
                 });
             }
         }
-     });
+    });
 
     // window.close();
 })
+

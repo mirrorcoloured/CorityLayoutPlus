@@ -1,32 +1,46 @@
 {
     "name": "CorityLayout+",
     "description": "Makes the Cority layout editor easier to use by adding CSS styling and detecting metadata",
-    "version": "1.3",
+    "version": "1.4.1",
     "author": "Sky Chrastina",
     "icons": {
         "16": "icon.png"
     },
     "permissions": [
-		"activeTab",
+        "activeTab",
         "storage"
     ],
     "browser_action": {
         "default_popup": "popup.html",
         "default_icon": "icon.png",
-		"default_title": "CorityLayout+"
+        "default_title": "CorityLayout+"
     },
-	"background": {
-        "scripts": ["background.js"],
+    "background": {
+        "scripts": [
+            "background.js"
+        ],
         "persistent": false
     },
     "content_scripts": [
         {
-        "matches": [
-			"http://*/*layout.rails*",
-			"https://*/*layout.rails*"
-		],
-        "js": ["contentscript.js"],
-        "run_at": "document_end"
+            "matches": [
+                "http://*.cority.com/*/layout.rails*",
+                "https://*.cority.com/*layout.rails*"
+            ],
+            "js": [
+                "layoutscript.js"
+            ],
+            "run_at": "document_end"
+        },
+        {
+            "matches": [
+                "http://*.cority.com/*/display.rails*",
+                "https://*.cority.com/*display.rails*"
+            ],
+            "js": [
+                "formscript.js"
+            ],
+            "run_at": "document_end"
         }
     ],
     "manifest_version": 2
