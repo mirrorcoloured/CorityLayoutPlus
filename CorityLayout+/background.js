@@ -57,6 +57,7 @@ chrome.extension.onMessage.addListener(
 	}
 );
 
+// Update icon based on autorun options
 function updateIcon() {
 	const iconmap = {
 		"true,true": e => chrome.browserAction.setIcon({ path: 'icon128lf.png' }),
