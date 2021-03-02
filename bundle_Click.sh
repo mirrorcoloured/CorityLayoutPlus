@@ -1,1 +1,1 @@
-"C:/Program Files/7-Zip/7z.exe" a CorityLayout+.Click.VERSION.zip ./CorityLayout+.Click/*
+"C:/Program Files/7-Zip/7z.exe" a CorityLayout+.VERSION.zip ./CorityLayout+/*
