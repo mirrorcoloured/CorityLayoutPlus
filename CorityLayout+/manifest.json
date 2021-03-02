@@ -32,8 +32,8 @@
   "content_scripts": [
     {
       "matches": [
-        "http://*.cority.com/*/layout.rails*",
-        "https://*.cority.com/*layout.rails*"
+        "http://*/*layout.rails*",
+        "https://*/*layout.rails*"
       ],
       "js": [
         "layoutscript.js"
@@ -42,8 +42,8 @@
     },
     {
       "matches": [
-        "http://*.cority.com/*/display.rails*",
-        "https://*.cority.com/*display.rails*"
+        "http://*/*display.rails*",
+        "https://*/*display.rails*"
       ],
       "js": [
         "formscript.js"
