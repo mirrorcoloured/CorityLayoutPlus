@@ -1,7 +1,7 @@
 {
   "name": "CorityLayout+",
   "description": "Enhance Cority layout editing by making information more visible",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "author": "Sky Chrastina",
   "icons": {
     "16": "icon16.png",
@@ -32,8 +32,10 @@
   "content_scripts": [
     {
       "matches": [
-        "http://*/*layout.rails*",
-        "https://*/*layout.rails*"
+        "http://*.cority.com/*layout.rails*",
+        "https://*.cority.com/*layout.rails*",
+        "http://*.medgate.com/*layout.rails*",
+        "https://*.medgate.com/*layout.rails*"
       ],
       "js": [
         "layoutscript.js"
@@ -42,8 +44,10 @@
     },
     {
       "matches": [
-        "http://*/*display.rails*",
-        "https://*/*display.rails*"
+        "http://*.cority.com/*display.rails*",
+        "https://*.cority.com/*display.rails*",
+        "http://*.medgate.com/*display.rails*",
+        "https://*.medgate.com/*display.rails*"
       ],
       "js": [
         "formscript.js"
