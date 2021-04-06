@@ -6,6 +6,14 @@ chrome.extension.sendMessage({ verb: "get", noun: ["options"] }, function (respo
 
         let INJECTION_SCRIPT = "";
 
+        let colordict = {};
+        for (let [key, obj] of Object.entries(response)) {
+            const pieces = key.split("_");
+            if (pieces[1] == "color") {
+                colordict[pieces[2]] = obj.value;
+            }
+        }
+
         for (let tdcell of document.getElementsByClassName('field_cell')) {
             if (tdcell.children.length > 0) {
                 const divtile = tdcell.children[0];
@@ -24,32 +32,6 @@ chrome.extension.sendMessage({ verb: "get", noun: ["options"] }, function (respo
         }
 
         inject_global_javascript(INJECTION_SCRIPT);
-
-
-
-
-        function getcolor(t) {
-            const typedict = {
-                // common
-                'Lookup': hsv(120, 0.25, .65), // green
-                'String': hsv(0, 0.25, .65), // red
-                'Date': hsv(240, 0.25, .65), // purple
-                // seldom
-                'Time': hsv(240, 0.25, .85), // light purple
-                'Select': hsv(120, 0.25, .85), // light green
-                'Text': hsv(0, 0.35, .85), // light red
-                'TextArea': hsv(0, 0.25, .55), // dark reddish brown
-                // rare
-                'Checkbox': hsv(0, 0, 1), // white
-                'RadioButton': hsv(120, 0.25, .55), // dark green
-                'Calculated': hsv(300, 0.25, 0.55), // fuschia
-                'AttachDocument': hsv(60, 0.25, 0.65), // pale yellow
-                'PlaceHolder': hsv(180, 0.25, 0.65), // teal
-                'CircularIndicator': hsv(300, 0.25, 0.65), // light fuschia
-                'LinkedLabel': hsv(90, 0.6, 0.9), // lime yellow
-            };
-            return typedict[t];
-        }
 
         function getFieldType(tdcell) {
             const divtile = tdcell.children[0];
