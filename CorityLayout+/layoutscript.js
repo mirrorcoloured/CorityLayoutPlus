@@ -35,6 +35,9 @@ chrome.extension.sendMessage({ verb: "get", noun: ["options"] }, function (respo
 
         function getFieldType(tdcell) {
             const divtile = tdcell.children[0];
+            if (["Created By", "Modified By", "Locked By", "Created Date", "Modified Date", "Lock Date Time", "Locked Unlocked"].includes(divtile.title)) {
+                return "Metadata";
+            }
             const scr = divtile.children[2].innerHTML;
             return scr.slice(scr.indexOf("type:") + 7, scr.indexOf('\"', scr.indexOf("type:") + 7));
         }
@@ -52,24 +55,31 @@ chrome.extension.sendMessage({ verb: "get", noun: ["options"] }, function (respo
             const divtile = tdcell.children[0];
             const scr = divtile.children[2].innerHTML;
             const typename = getFieldType(tdcell);
-            const tilecolor = getcolor(typename) || '#dcdcdc';
-            const cellcolor = getcolor(typename) || '#d0ecfb';
+            const tilecolor = colordict[typename] || '#dcdcdc';
+            const cellcolor = colordict[typename] || '#d0ecfb';
 
             // Set colors
             tdcell.style.backgroundColor = cellcolor;
             //   tdcell.style.border = '3px solid purple'// + tilecolor;
             divtile.style.backgroundColor = tilecolor;
+            // divtile.style.height = "100%";
             divtile.parentNode.style.border = '1px solid gray';
 
             // Modify color by class
             if (divtile.classList.contains('disabled')) {
-                divtile.style.backgroundColor = '#dcdcdc';
+                divtile.style.backgroundColor = colordict["Disabled"];
                 divtile.style.opacity = 0.95;
                 divtile.style.padding = 0;
+
+                // https://stackoverflow.com/questions/21956790/css-cross-through-an-element
+                divtile.style.textDecoration = "line-through";
+                divtile.style.border = "3px solid black";
             }
             if (divtile.classList.contains('required') ||
                 divtile.classList.contains('system')) {
-                divtile.style.backgroundColor = '#f55';
+                divtile.style.backgroundColor = colordict["Required"];
+
+                divtile.style.border = "3px solid red";
             }
         }
 
@@ -96,8 +106,8 @@ chrome.extension.sendMessage({ verb: "get", noun: ["options"] }, function (respo
             // Resize
             tdcell.style.maxWidth = "126.67px";
 
-            divtile.style.height = "60px";
-            divtile.style.width = "100%";
+            divtile.style.height = "64px";
+            divtile.style.width = "95%";
 
             label.style.display = "inline-block";
             label.style.width = "100%";
@@ -147,7 +157,7 @@ chrome.extension.sendMessage({ verb: "get", noun: ["options"] }, function (respo
 
         function translateEntity(parententity, entity) {
             parententity = parententity.toLowerCase();
-            entity = entity.toLowerCase();
+            let lowerentity = entity.toLowerCase();
 
             // TODO find better way of getting this info
 
@@ -156,6 +166,7 @@ chrome.extension.sendMessage({ verb: "get", noun: ["options"] }, function (respo
                 "modifiedby": "User",
                 "physician": "User",
                 "practitioner": "User",
+                "tobereviewedby": "User",
 
                 "supervisor": "Employee",
 
@@ -185,12 +196,12 @@ chrome.extension.sendMessage({ verb: "get", noun: ["options"] }, function (respo
                 "workflow": "WorkflowStatus",
             }
 
-            if (Object.keys(translations).includes(entity)) {
-                if (typeof translations[entity] == "string") {
-                    return translations[entity];
+            if (Object.keys(translations).includes(lowerentity)) {
+                if (typeof translations[lowerentity] == "string") {
+                    return translations[lowerentity];
                 } else {
-                    if (Object.keys(translations[entity]).includes(parententity)) {
-                        return translations[entity][parententity];
+                    if (Object.keys(translations[lowerentity]).includes(parententity)) {
+                        return translations[lowerentity][parententity];
                     }
                 }
             }
