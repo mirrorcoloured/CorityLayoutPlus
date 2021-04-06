@@ -1,35 +1,80 @@
+let lastUpdate = new Date;
+const minUpdateWait = 100;
+
 // Pull data from background to setup form
 let option_data = {};
 window.onload = function () {
     chrome.extension.sendMessage({ verb: "get", noun: "options" }, function (response) {
         option_data = response;
         console.log('Got options', option_data);
-        for (let [key, value] of Object.entries(option_data)) {
-            let element = document.querySelector(`#${key}`);
-            if (element) {
-                if (element.type == "checkbox") {
-                    element.checked = value;
-                } else {
-                    element.value = value;
-                }
+
+        const optionstablelayout = document.querySelector("#optionstablelayout");
+        const optionstableform = document.querySelector("#optionstableform");
+
+        // create HTML elements for each option
+        for (let [key, obj] of Object.entries(option_data)) {
+            const pieces = key.split("_");
+            let tbl = pieces[0] == "form" ? optionstableform : optionstablelayout;
+            let trow = document.createElement("tr");
+            let tdkey = document.createElement("td");
+            let tdval = document.createElement("td");
+            let tdinp = document.createElement("input");
+
+            tdkey.innerHTML = obj.text;
+            tdinp.id = key;
+            tdinp.type = obj.type;
+            if (tdinp.type == "checkbox") {
+                tdinp.checked = obj.value;
+            } else {
+                tdinp.value = obj.value;
             }
+
+            tdinp.addEventListener("input", function (event) {
+                if (tdinp.type == "checkbox") {
+                    option_data[key].value = tdinp.checked;
+                } else {
+                    option_data[key].value = tdinp.value;
+                }
+                if (new Date - lastUpdate > minUpdateWait) {
+                    lastUpdate = new Date;
+                    setTimeout(sendOptions, minUpdateWait);
+                }
+            });
+
+            tdval.appendChild(tdinp);
+            trow.appendChild(tdkey);
+            trow.appendChild(tdval);
+            tbl.appendChild(trow);
         }
     });
 }
 
-// Add event listeners to send data to background
-for (let element of document.querySelectorAll("input")) {
-    element.addEventListener("input", function (event) {
-        if (element.type == "checkbox") {
-            option_data[element.id] = element.checked;
-        } else {
-            option_data[element.id] = element.value;
-        }
-        console.log("Sending options", option_data);
-        chrome.extension.sendMessage({
-            verb: "set",
-            noun: "options",
-            data: option_data,
-        });
+function sendOptions() {
+    console.log("Sending options", option_data);
+    chrome.extension.sendMessage({
+        verb: "set",
+        noun: "options",
+        data: option_data,
     });
 }
+
+document.querySelector("#resetcolors").addEventListener("click", function (e) {
+    if (confirm("Are you sure you want to reset to default colors?")) {
+        chrome.extension.sendMessage({ verb: "get", noun: ["defaults"] }, function (response) {
+            for (let [key, obj] of Object.entries(response)) {
+                const pieces = key.split("_");
+                let element = document.querySelector(`#${key}`);
+                if (element && pieces[1] == "color") {
+                    if (element.type == "checkbox") {
+                        element.checked = obj.value;
+                        option_data[element.id].value = element.checked;
+                    } else {
+                        element.value = obj.value;
+                        option_data[element.id].value = element.value;
+                    }
+                }
+            }
+            sendOptions();
+        })
+    }
+})
