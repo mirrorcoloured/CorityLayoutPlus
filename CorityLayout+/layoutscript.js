@@ -1,8 +1,4 @@
-chrome.extension.sendMessage({ verb: "get", noun: ["options", "layout_autorun"] }, function (response) {
-    if (typeof clicked_icon !== "undefined") {
-        response = true;
-    }
-    if (response == true) {
+chrome.extension.sendMessage({ verb: "get", noun: ["options"] }, function (response) {
 
         console.log("[CorityLayout+]", "layoutscript Running...")
 
