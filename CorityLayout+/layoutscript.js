@@ -1,5 +1,7 @@
 chrome.extension.sendMessage({ verb: "get", noun: ["options"] }, function (response) {
 
+    if (response.layout_autorun.value == true || typeof clicked_icon !== "undefined") {
+
         console.log("[CorityLayout+]", "layoutscript Running...")
 
         let INJECTION_SCRIPT = "";
