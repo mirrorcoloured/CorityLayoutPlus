@@ -82,5 +82,6 @@ document.querySelector("#resetcolors").addEventListener("click", function (e) {
 document.querySelector("#resetmemory").addEventListener("click", function (e) {
     if (confirm("Are you sure you want to clear the memory for this extension?")) {
         chrome.storage.sync.clear();
+        chrome.storage.local.clear();
     }
 })
