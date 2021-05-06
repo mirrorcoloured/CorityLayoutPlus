@@ -4,6 +4,8 @@ let persistent_storage = {
 	defaults: {},
 }
 
+// console.log("chrome object", chrome);
+
 function get_option_defaults() {
 	return {
 		layout_autorun: { value: false, type: "checkbox", text: "Run automatically on page load" },
