@@ -18,6 +18,7 @@ function get_option_defaults() {
 		layout_color_Integer: { value: "#87c3e8", type: "color", text: "Color - Integer" },
 		layout_color_Number: { value: "#94d3fa", type: "color", text: "Color - Number" },
 		layout_color_Lookup: { value: "#9be49b", type: "color", text: "Color - Lookup" },
+		layout_color_UDFLookup: { value: "#9be49b", type: "color", text: "Color - UDFLookup" },
 		layout_color_TreePicker: { value: "#23d520", type: "color", text: "Color - TreePicker" },
 		layout_color_Select: { value: "#bad9af", type: "color", text: "Color - Select" },
 		layout_color_RadioButton: { value: "#96a970", type: "color", text: "Color - RadioButton" },
@@ -28,6 +29,10 @@ function get_option_defaults() {
 		layout_color_LinkedLabel: { value: "#e6f5d6", type: "color", text: "Color - LinkedLabel" },
 		layout_color_Calculated: { value: "#f0c7ff", type: "color", text: "Color - Calculated" },
 		layout_color_CircularIndicator: { value: "#ffebff", type: "color", text: "Color - CircularIndicator" },
+
+		layout_color_Draw: { value: "#ffadfc", type: "color", text: "Color - Draw" },
+		layout_color_SvgXml: { value: "#ff75f4", type: "color", text: "Color - SvgXml" },
+		layout_color_HttpLinkDocument: { value: "#ffdbdb", type: "color", text: "Color - HttpLinkDocument" },
 	}
 }
 for (let [key, value] of Object.entries(get_option_defaults())) {
