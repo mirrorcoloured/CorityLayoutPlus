@@ -101,6 +101,10 @@ chrome.extension.onMessage.addListener(
 				request.noun = [request.noun];
 			}
 			let scope = persistent_storage;
+			if (request.noun[0] == "tab") {
+				scope = sender.tab;
+				request.noun.splice(0, 1);
+			}
 			for (let [index, nounpath] of request.noun.entries()) {
 				if (nounpath in scope) {
 					if (index < request.noun.length - 1) {
@@ -132,13 +136,12 @@ function updateIcon() {
 
 // Activate when user clicks icon
 chrome.browserAction.onClicked.addListener(function (tab) {
-	chrome.tabs.executeScript(tab.id, {
-		code: 'const clicked_icon = true;' // inject code to flag that button was clicked
-	}, function () {
-		if (tab.url.indexOf("layout.rails") > -1) {
-			chrome.tabs.executeScript(tab.id, { file: 'layoutscript.js' });
-		} else {
-			chrome.tabs.executeScript(tab.id, { file: 'formscript.js' });
+	console.log("[CorityLayout+] Clicked icon");
+	chrome.tabs.executeScript(
+		tab.id,
+		{ code: 'const clicked_icon = true;' }, // inject code to flag that button was clicked
+		function () {
+			chrome.tabs.executeScript(tab.id, { file: 'script.js' });
 		}
-	});
+	);
 });

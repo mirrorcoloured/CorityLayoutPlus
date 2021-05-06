@@ -32,25 +32,13 @@
   "content_scripts": [
     {
       "matches": [
-        "http://*.cority.com/*layout.rails*",
-        "https://*.cority.com/*layout.rails*",
-        "http://*.medgate.com/*layout.rails*",
-        "https://*.medgate.com/*layout.rails*"
+        "http://*.cority.com/*",
+        "https://*.cority.com/*",
+        "http://*.medgate.com/*",
+        "https://*.medgate.com/*"
       ],
       "js": [
-        "layoutscript.js"
-      ],
-      "run_at": "document_end"
-    },
-    {
-      "matches": [
-        "http://*.cority.com/*display.rails*",
-        "https://*.cority.com/*display.rails*",
-        "http://*.medgate.com/*display.rails*",
-        "https://*.medgate.com/*display.rails*"
-      ],
-      "js": [
-        "formscript.js"
+        "script.js"
       ],
       "run_at": "document_end"
     }
