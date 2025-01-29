@@ -1,4 +1,5 @@
 // Set up default storage parameters
+// TODO use storage object instead of global object
 let persistent_storage = {
     options: {},
     defaults: {},
@@ -84,7 +85,7 @@ function mergeDeep(...objects) {
 }
 
 // Listen for messages
-chrome.extension.onMessage.addListener(function (request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     console.log("Got request", request);
 
     if (request.verb == "set") {
@@ -120,23 +121,20 @@ chrome.extension.onMessage.addListener(function (request, sender, sendResponse) 
 // Update icon based on autorun options
 function updateIcon() {
     const iconmap = {
-        "true,true": (e) => chrome.browserAction.setIcon({ path: "icon128lf.png" }),
-        "true,false": (e) => chrome.browserAction.setIcon({ path: "icon128l.png" }),
-        "false,true": (e) => chrome.browserAction.setIcon({ path: "icon128f.png" }),
-        "false,false": (e) => chrome.browserAction.setIcon({ path: "icon128.png" }),
+        "true,true": (e) => chrome.action.setIcon({ path: "icon128lf.png" }),
+        "true,false": (e) => chrome.action.setIcon({ path: "icon128l.png" }),
+        "false,true": (e) => chrome.action.setIcon({ path: "icon128f.png" }),
+        "false,false": (e) => chrome.action.setIcon({ path: "icon128.png" }),
     };
     const option_status = String([persistent_storage.options.layout_autorun.value, persistent_storage.options.form_autorun.value]);
     iconmap[option_status]();
 }
 
 // Activate when user clicks icon
-chrome.browserAction.onClicked.addListener(function (tab) {
+chrome.action.onClicked.addListener(function (tab) {
     console.log("[CorityLayout+] Clicked icon");
-    chrome.tabs.executeScript(
-        tab.id,
-        { code: "const clicked_icon = true;" }, // inject code to flag that button was clicked
-        function () {
-            chrome.tabs.executeScript(tab.id, { file: "script.js" });
-        }
-    );
+    chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        files: ["script.js"],
+    });
 });
