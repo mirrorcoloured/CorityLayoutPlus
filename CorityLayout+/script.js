@@ -1,4 +1,4 @@
-console.log('[CorityLayout+] Running content script');
+console.log("[CorityLayout+] Running content script");
 
 // console.log('chrome object', chrome);
 
@@ -15,11 +15,11 @@ function getTextBetween(text, left, right) {
 chrome.extension.sendMessage({ verb: "get", noun: ["tab", "url"] }, function (response) {
     const url = response;
     chrome.extension.sendMessage({ verb: "get", noun: ["options"] }, function (response) {
-
-        if (url.indexOf("layout.rails") > -1) { // layout script
+        if (url.indexOf("layout.rails") > -1) {
+            // layout script
 
             if (response.layout_autorun.value == true || typeof clicked_icon !== "undefined") {
-                console.log("[CorityLayout+]", "layoutscript Running...")
+                console.log("[CorityLayout+]", "layoutscript Running...");
 
                 let INJECTION_SCRIPT = "";
 
@@ -31,19 +31,17 @@ chrome.extension.sendMessage({ verb: "get", noun: ["tab", "url"] }, function (re
                     }
                 }
 
-                for (let tdcell of document.getElementsByClassName('field_cell')) {
+                for (let tdcell of document.getElementsByClassName("field_cell")) {
                     if (tdcell.children.length > 0) {
                         const divtile = tdcell.children[0];
                         if (divtile.children.length >= 2) {
-
                             try {
                                 resizeTile(tdcell);
                                 modifyName(tdcell);
                                 colorCell(tdcell);
                             } catch (e) {
-                                console.log("[CorityLayout+]", e)
+                                console.log("[CorityLayout+]", e);
                             }
-
                         }
                     }
                 }
@@ -56,13 +54,13 @@ chrome.extension.sendMessage({ verb: "get", noun: ["tab", "url"] }, function (re
                         return "Metadata";
                     }
                     const scr = divtile.children[2].innerHTML;
-                    return scr.slice(scr.indexOf("type:") + 7, scr.indexOf('\"', scr.indexOf("type:") + 7));
+                    return scr.slice(scr.indexOf("type:") + 7, scr.indexOf('"', scr.indexOf("type:") + 7));
                 }
 
                 function getFieldLabel(tdcell) {
                     const divtile = tdcell.children[0];
                     const scr = divtile.children[2].innerHTML;
-                    let text = scr.slice(scr.indexOf("label:") + 8, scr.indexOf('\"', scr.indexOf("label:") + 8));
+                    let text = scr.slice(scr.indexOf("label:") + 8, scr.indexOf('"', scr.indexOf("label:") + 8));
                     text = text.replace("\\'", "'");
                     return text;
                 }
@@ -72,18 +70,18 @@ chrome.extension.sendMessage({ verb: "get", noun: ["tab", "url"] }, function (re
                     const divtile = tdcell.children[0];
                     const scr = divtile.children[2].innerHTML;
                     const typename = getFieldType(tdcell);
-                    const tilecolor = colordict[typename] || '#dcdcdc';
-                    const cellcolor = colordict[typename] || '#d0ecfb';
+                    const tilecolor = colordict[typename] || "#dcdcdc";
+                    const cellcolor = colordict[typename] || "#d0ecfb";
 
                     // Set colors
                     tdcell.style.backgroundColor = cellcolor;
                     //   tdcell.style.border = '3px solid purple'// + tilecolor;
                     divtile.style.backgroundColor = tilecolor;
                     // divtile.style.height = "100%";
-                    divtile.parentNode.style.border = '1px solid gray';
+                    divtile.parentNode.style.border = "1px solid gray";
 
                     // Modify color by class
-                    if (divtile.classList.contains('disabled')) {
+                    if (divtile.classList.contains("disabled")) {
                         divtile.style.backgroundColor = colordict["Disabled"];
                         divtile.style.opacity = 0.95;
                         divtile.style.padding = 0;
@@ -92,15 +90,12 @@ chrome.extension.sendMessage({ verb: "get", noun: ["tab", "url"] }, function (re
                         divtile.style.textDecoration = "line-through";
                         divtile.style.border = "3px solid black";
                     }
-                    if (divtile.classList.contains('required') ||
-                        divtile.classList.contains('system')) {
+                    if (divtile.classList.contains("required") || divtile.classList.contains("system")) {
                         divtile.style.backgroundColor = colordict["Required"];
 
                         divtile.style.border = "3px solid red";
                     }
                 }
-
-
 
                 function resizeTile(tdcell) {
                     const divtile = tdcell.children[0];
@@ -115,7 +110,7 @@ chrome.extension.sendMessage({ verb: "get", noun: ["tab", "url"] }, function (re
                     // Make label stand out better on top
                     const label = divtile.children[1];
                     label.style.zIndex = 1;
-                    label.style.position = 'relative';
+                    label.style.position = "relative";
                     label.style.left = "-100%";
                     label.style.fontWeight = "bold";
                     label.style.pointerEvents = "none";
@@ -131,12 +126,10 @@ chrome.extension.sendMessage({ verb: "get", noun: ["tab", "url"] }, function (re
                     label.style.overflow = "hidden";
                 }
 
-
-
                 function modifyName(tdcell) {
                     const divtile = tdcell.children[0];
                     const label = divtile.children[1];
-                    const baseName = divtile.getAttribute('name').replace("A_", "").replace("A-", "");
+                    const baseName = divtile.getAttribute("name").replace("A_", "").replace("A-", "");
                     const newName = getFieldLabel(tdcell);
                     const typename = getFieldType(tdcell);
                     const origname = divtile.getAttribute("title");
@@ -172,40 +165,40 @@ chrome.extension.sendMessage({ verb: "get", noun: ["tab", "url"] }, function (re
                     // TODO find better way of getting this info
 
                     const translations = {
-                        "createdby": "User",
-                        "modifiedby": "User",
-                        "physician": "User",
-                        "practitioner": "User",
-                        "tobereviewedby": "User",
+                        createdby: "User",
+                        modifiedby: "User",
+                        physician: "User",
+                        practitioner: "User",
+                        tobereviewedby: "User",
 
-                        "supervisor": "Employee",
+                        supervisor: "Employee",
 
-                        "driverlicensestate": "Jurisdiction",
-                        "physicianstate": "Jurisdiction",
-                        "homecountry": "Country",
+                        driverlicensestate: "Jurisdiction",
+                        physicianstate: "Jurisdiction",
+                        homecountry: "Country",
 
                         // safetyincident
-                        "accidentcause": "IncidentRootCause",
-                        "job": { "safetyincident": "SafetyRASJobList" },
-                        "locationtype": "AccidentLocation",
-                        "primarycategory": "GeneralIncidentCategory",
-                        "supervisorcompleted": "Employee",
-                        "manager": "Employee",
-                        "genmgr": "Employee",
-                        "ehs": "Employee",
-                        "responsibleexecutive": "Employee",
-                        "reportedto": "Employee",
-                        "reportedby": "Employee",
+                        accidentcause: "IncidentRootCause",
+                        job: { safetyincident: "SafetyRASJobList" },
+                        locationtype: "AccidentLocation",
+                        primarycategory: "GeneralIncidentCategory",
+                        supervisorcompleted: "Employee",
+                        manager: "Employee",
+                        genmgr: "Employee",
+                        ehs: "Employee",
+                        responsibleexecutive: "Employee",
+                        reportedto: "Employee",
+                        reportedby: "Employee",
                         // safetyfinding
-                        "rejectionreason": "Reason",
-                        "actionplan": { "safetyfinding": "SafetyActionPlan" },
-                        "category": "AuditCategory",
-                        "findingowner": "Employee",
-                        "topic": "AuditTopic",
-                        "severity": "HazardSeverityRating",
+                        rejectionreason: "Reason",
+                        actionplan: { safetyfinding: "SafetyActionPlan" },
+                        category: "AuditCategory",
+                        findingowner: "Employee",
+                        topic: "AuditTopic",
+                        severity: "HazardSeverityRating",
                         // risk
-                        "workflow": "WorkflowStatus",
-                    }
+                        workflow: "WorkflowStatus",
+                    };
 
                     if (Object.keys(translations).includes(lowerentity)) {
                         if (typeof translations[lowerentity] == "string") {
@@ -219,14 +212,11 @@ chrome.extension.sendMessage({ verb: "get", noun: ["tab", "url"] }, function (re
                     return entity;
                 }
 
-
                 function inject_global_javascript(payload) {
                     let script = document.createElement("script");
                     script.innerHTML = payload;
                     document.head.appendChild(script);
                 }
-
-
 
                 function hsv(h, s, v) {
                     h /= 360;
@@ -240,12 +230,24 @@ chrome.extension.sendMessage({ verb: "get", noun: ["tab", "url"] }, function (re
                     var t = v * (1 - (1 - f) * s);
 
                     switch (i % 6) {
-                        case 0: r = v, g = t, b = p; break;
-                        case 1: r = q, g = v, b = p; break;
-                        case 2: r = p, g = v, b = t; break;
-                        case 3: r = p, g = q, b = v; break;
-                        case 4: r = t, g = p, b = v; break;
-                        case 5: r = v, g = p, b = q; break;
+                        case 0:
+                            (r = v), (g = t), (b = p);
+                            break;
+                        case 1:
+                            (r = q), (g = v), (b = p);
+                            break;
+                        case 2:
+                            (r = p), (g = v), (b = t);
+                            break;
+                        case 3:
+                            (r = p), (g = q), (b = v);
+                            break;
+                        case 4:
+                            (r = t), (g = p), (b = v);
+                            break;
+                        case 5:
+                            (r = v), (g = p), (b = q);
+                            break;
                     }
                     r *= 360;
                     g *= 360;
@@ -254,14 +256,13 @@ chrome.extension.sendMessage({ verb: "get", noun: ["tab", "url"] }, function (re
                     return `rgb(${r}, ${g}, ${b})`;
                 }
             }
-
-
-        } else { // form script
+        } else {
+            // form script
 
             if (response.form_autorun.value == true || typeof clicked_icon !== "undefined") {
-                console.log("[CorityLayout+]", "formscript Running...")
+                console.log("[CorityLayout+]", "formscript Running...");
 
-                for (let titlecell of document.getElementsByClassName('titlecell')) {
+                for (let titlecell of document.getElementsByClassName("titlecell")) {
                     if (titlecell.children.length > 0) {
                         addPropertyName(titlecell);
                     }
@@ -279,19 +280,16 @@ chrome.extension.sendMessage({ verb: "get", noun: ["tab", "url"] }, function (re
                     const base_text = label.getAttribute("basetext");
                     const property_name = label.getAttribute("for");
 
-                    label.innerHTML =
-                        `${original_label}
+                    label.innerHTML = `${original_label}
                 <br>
                 <span style="font-size:12px;">
                 <span style="color: red;">[${base_text}]</span>
                 <br>
                 <span style="color: blue;">[${property_name}]</span>
                 </span>
-                `
-                        ;
+                `;
                 }
             }
-
         }
-    })
+    });
 });

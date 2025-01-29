@@ -1,4 +1,4 @@
-let lastUpdate = new Date;
+let lastUpdate = new Date();
 const minUpdateWait = 100;
 
 // Pull data from background to setup form
@@ -6,7 +6,7 @@ let option_data = {};
 window.onload = function () {
     chrome.extension.sendMessage({ verb: "get", noun: "options" }, function (response) {
         option_data = response;
-        console.log('Got options', option_data);
+        console.log("Got options", option_data);
 
         const optionstablelayout = document.querySelector("#optionstablelayout");
         const optionstableform = document.querySelector("#optionstableform");
@@ -35,8 +35,8 @@ window.onload = function () {
                 } else {
                     option_data[key].value = tdinp.value;
                 }
-                if (new Date - lastUpdate > minUpdateWait) {
-                    lastUpdate = new Date;
+                if (new Date() - lastUpdate > minUpdateWait) {
+                    lastUpdate = new Date();
                     setTimeout(sendOptions, minUpdateWait);
                 }
             });
@@ -47,7 +47,7 @@ window.onload = function () {
             tbl.appendChild(trow);
         }
     });
-}
+};
 
 function sendOptions() {
     console.log("Sending options", option_data);
@@ -75,13 +75,13 @@ document.querySelector("#resetcolors").addEventListener("click", function (e) {
                 }
             }
             sendOptions();
-        })
+        });
     }
-})
+});
 
 document.querySelector("#resetmemory").addEventListener("click", function (e) {
     if (confirm("Are you sure you want to clear the memory for this extension?")) {
         chrome.storage.sync.clear();
         chrome.storage.local.clear();
     }
-})
+});
