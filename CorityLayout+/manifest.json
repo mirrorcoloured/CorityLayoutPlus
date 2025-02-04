@@ -12,7 +12,8 @@
   "permissions": [
     "activeTab",
     "storage",
-    "scripting"
+    "scripting",
+    "tabs"
   ],
   "action": {
     "default_icon": {
@@ -37,7 +38,7 @@
         "https://*.medgate.com/*"
       ],
       "js": [
-        "script.js"
+        "content.js"
       ],
       "run_at": "document_end"
     }

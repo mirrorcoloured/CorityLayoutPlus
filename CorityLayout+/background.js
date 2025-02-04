@@ -1,12 +1,3 @@
-// Set up default storage parameters
-// TODO use storage object instead of global object
-let persistent_storage = {
-    options: {},
-    defaults: {},
-};
-
-// console.log("chrome object", chrome);
-
 function get_option_defaults() {
     return {
         layout_autorun: { value: false, type: "checkbox", text: "Run automatically on page load" },
@@ -38,32 +29,18 @@ function get_option_defaults() {
         layout_color_HttpLinkDocument: { value: "#ffdbdb", type: "color", text: "Color - HttpLinkDocument" },
     };
 }
-for (let [key, value] of Object.entries(get_option_defaults())) {
-    persistent_storage.options[key] = value;
-    persistent_storage.defaults[key] = value;
-}
 
-// Load persistent storage from storage asynchronously
-// chrome.storage.sync.get(console.log)
-// chrome.storage.sync.clear()
-chrome.storage.sync.get(function (response) {
-    console.log("Got storage:", response);
-    console.log("Merging with default values", persistent_storage);
-    persistent_storage = mergeDeep(persistent_storage, response);
-    console.log("Local storage object is", persistent_storage);
-    updateIcon();
-});
-
-/**
- * Performs a deep merge of objects and returns new object. Does not modify
- * objects (immutable) and merges arrays via concatenation.
- * First objects take precendence in case of duplicate object keys
- * https://stackoverflow.com/a/48218209
- *
- * @param {...object} objects - Objects to merge
- * @returns {object} New object with merged key/values
- */
 function mergeDeep(...objects) {
+    /**
+     * Performs a deep merge of objects and returns new object. Does not modify
+     * objects (immutable) and merges arrays via concatenation.
+     * First objects take precendence in case of duplicate object keys
+     * https://stackoverflow.com/a/48218209
+     *
+     * @param {...object} objects - Objects to merge
+     * @returns {object} New object with merged key/values
+     */
+
     const isObject = (obj) => obj && typeof obj === "object";
 
     return objects.reduce((prev, obj) => {
@@ -88,33 +65,12 @@ function mergeDeep(...objects) {
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     console.log("Got request", request);
 
-    if (request.verb == "set") {
-        console.log("Setting", request.noun, "to:", request.data);
-        persistent_storage[request.noun] = request.data;
-        chrome.storage.sync.set({ [request.noun]: persistent_storage[request.noun] });
+    if (request.type == "updateIcon") {
         updateIcon();
-    } else if (request.verb == "get") {
-        if (!Array.isArray(request.noun)) {
-            request.noun = [request.noun];
-        }
-        let scope = persistent_storage;
-        if (request.noun[0] == "tab") {
-            scope = sender.tab;
-            request.noun.splice(0, 1);
-        }
-        for (let [index, nounpath] of request.noun.entries()) {
-            if (nounpath in scope) {
-                if (index < request.noun.length - 1) {
-                    scope = scope[nounpath];
-                } else {
-                    console.log("Returning value:", scope[nounpath]);
-                    sendResponse(scope[nounpath]);
-                }
-            } else {
-                console.log("Unknown variable", nounpath, "in", request.noun);
-                sendResponse(null);
-            }
-        }
+    } else if (request.type == "getDefaultOptions") {
+        sendResponse(get_option_defaults());
+    } else {
+        console.log("Unknown message type", { request });
     }
 });
 
@@ -126,15 +82,25 @@ function updateIcon() {
         "false,true": (e) => chrome.action.setIcon({ path: "icon128f.png" }),
         "false,false": (e) => chrome.action.setIcon({ path: "icon128.png" }),
     };
-    const option_status = String([persistent_storage.options.layout_autorun.value, persistent_storage.options.form_autorun.value]);
-    iconmap[option_status]();
+    chrome.storage.sync.get("options").then((response) => {
+        response.options;
+        const option_status = String([response.options.layout_autorun.value, response.options.form_autorun.value]);
+        iconmap[option_status]();
+    });
 }
 
 // Activate when user clicks icon
 chrome.action.onClicked.addListener(function (tab) {
-    console.log("[CorityLayout+] Clicked icon");
+    console.log("[CorityLayout+] Clicked icon", { tab });
+    injectScriptOnTab(tab);
+});
+
+function injectScriptOnTab(tab) {
+    console.log("[CorityLayout+] Injecting script.js on tab", tab);
     chrome.scripting.executeScript({
         target: { tabId: tab.id },
         files: ["script.js"],
     });
-});
+}
+
+updateIcon();
