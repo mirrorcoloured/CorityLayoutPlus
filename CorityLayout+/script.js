@@ -12,12 +12,13 @@ function getTextBetween(text, left, right) {
     return text.slice(l, r);
 }
 
-chrome.extension.sendMessage({ verb: "get", noun: ["tab", "url"] }, function (response) {
+chrome.runtime.sendMessage({ verb: "get", noun: ["tab", "url"] }, function (response) {
     const url = response;
-    chrome.extension.sendMessage({ verb: "get", noun: ["options"] }, function (response) {
+    chrome.runtime.sendMessage({ verb: "get", noun: ["options"] }, function (response) {
         if (url.indexOf("layout.rails") > -1) {
             // layout script
 
+            // TODO probably need to detect clicked_icon another way or refactor
             if (response.layout_autorun.value == true || typeof clicked_icon !== "undefined") {
                 console.log("[CorityLayout+]", "layoutscript Running...");
 
