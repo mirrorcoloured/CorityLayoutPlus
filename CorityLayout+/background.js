@@ -1,32 +1,6 @@
 function get_option_defaults() {
     return {
-        layout_autorun: { value: false, type: "checkbox", text: "Run automatically on page load" },
         form_autorun: { value: false, type: "checkbox", text: "Run automatically on page load" },
-        layout_color_Required: { value: "#ff600a", type: "color", text: "Color - Required" },
-        layout_color_Disabled: { value: "#9e9e9e", type: "color", text: "Color - Disabled" },
-        layout_color_PlaceHolder: { value: "#ffffff", type: "color", text: "Color - PlaceHolder" },
-        layout_color_Metadata: { value: "#ffffff", type: "color", text: "Color - Metadata" },
-        layout_color_Checkbox: { value: "#e6e384", type: "color", text: "Color - Checkbox" },
-        layout_color_Date: { value: "#b6b6dd", type: "color", text: "Color - Date" },
-        layout_color_Time: { value: "#cecef2", type: "color", text: "Color - Time" },
-        layout_color_Integer: { value: "#87c3e8", type: "color", text: "Color - Integer" },
-        layout_color_Number: { value: "#94d3fa", type: "color", text: "Color - Number" },
-        layout_color_Lookup: { value: "#9be49b", type: "color", text: "Color - Lookup" },
-        layout_color_UDFLookup: { value: "#9be49b", type: "color", text: "Color - UDFLookup" },
-        layout_color_TreePicker: { value: "#23d520", type: "color", text: "Color - TreePicker" },
-        layout_color_Select: { value: "#bad9af", type: "color", text: "Color - Select" },
-        layout_color_RadioButton: { value: "#96a970", type: "color", text: "Color - RadioButton" },
-        layout_color_String: { value: "#dc8989", type: "color", text: "Color - String" },
-        layout_color_Text: { value: "#ffb3b3", type: "color", text: "Color - Text" },
-        layout_color_TextArea: { value: "#ff6b6b", type: "color", text: "Color - TextArea" },
-        layout_color_AttachDocument: { value: "#d0bea4", type: "color", text: "Color - AttachDocument" },
-        layout_color_LinkedLabel: { value: "#e6f5d6", type: "color", text: "Color - LinkedLabel" },
-        layout_color_Calculated: { value: "#f0c7ff", type: "color", text: "Color - Calculated" },
-        layout_color_CircularIndicator: { value: "#ffebff", type: "color", text: "Color - CircularIndicator" },
-
-        layout_color_Draw: { value: "#ffadfc", type: "color", text: "Color - Draw" },
-        layout_color_SvgXml: { value: "#ff75f4", type: "color", text: "Color - SvgXml" },
-        layout_color_HttpLinkDocument: { value: "#ffdbdb", type: "color", text: "Color - HttpLinkDocument" },
     };
 }
 
@@ -83,8 +57,8 @@ function updateIcon() {
         "false,false": (e) => chrome.action.setIcon({ path: "icon128.png" }),
     };
     chrome.storage.sync.get("options").then((response) => {
-        response.options;
-        const option_status = String([response.options.layout_autorun.value, response.options.form_autorun.value]);
+        const form_autorun = response.options.form_autorun.value || false;
+        const option_status = String([false, form_autorun]);
         iconmap[option_status]();
     });
 }
@@ -103,4 +77,11 @@ function injectScriptOnTab(tab) {
     });
 }
 
-updateIcon();
+// Get default options and override with saved values
+chrome.storage.sync.get("options").then((response) => {
+    const options = response.options || {};
+    const defaults = get_option_defaults();
+    const combined = mergeDeep(defaults, options);
+    chrome.storage.sync.set({ options: combined });
+    updateIcon();
+});
