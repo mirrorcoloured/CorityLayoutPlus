@@ -9,7 +9,7 @@ chrome.storage.sync.get((response) => {
             console.log("[CorityLayout+]", "layoutscript Running...");
             alert("Layout editor formatting has been deprecated. Please contact author if functionality is needed.");
         }
-    } else if ((url.toLowerCase().indexOf("display.rails") > -1) || (url.toLowerCase().indexOf("new.rails") > -1)) {
+    } else if (url.toLowerCase().indexOf("display.rails") > -1 || url.toLowerCase().indexOf("new.rails") > -1 || url.toLowerCase().indexOf("openallsameincident.rails") > -1) {
         // form script
         if (options.form_autorun.value == true) {
             console.log("[CorityLayout+]", "formscript Running...");
