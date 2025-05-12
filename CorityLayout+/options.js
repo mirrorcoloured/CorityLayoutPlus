@@ -1,12 +1,12 @@
-let lastUpdate = new Date;
+let lastUpdate = new Date();
 const minUpdateWait = 100;
 
 // Pull data from background to setup form
 let option_data = {};
 window.onload = function () {
-    chrome.extension.sendMessage({ verb: "get", noun: "options" }, function (response) {
-        option_data = response;
-        console.log('Got options', option_data);
+    chrome.storage.sync.get("options").then(function (response) {
+        option_data = response.options;
+        console.log("Got options", option_data);
 
         const optionstablelayout = document.querySelector("#optionstablelayout");
         const optionstableform = document.querySelector("#optionstableform");
@@ -35,8 +35,8 @@ window.onload = function () {
                 } else {
                     option_data[key].value = tdinp.value;
                 }
-                if (new Date - lastUpdate > minUpdateWait) {
-                    lastUpdate = new Date;
+                if (new Date() - lastUpdate > minUpdateWait) {
+                    lastUpdate = new Date();
                     setTimeout(sendOptions, minUpdateWait);
                 }
             });
@@ -47,20 +47,17 @@ window.onload = function () {
             tbl.appendChild(trow);
         }
     });
-}
+};
 
 function sendOptions() {
     console.log("Sending options", option_data);
-    chrome.extension.sendMessage({
-        verb: "set",
-        noun: "options",
-        data: option_data,
-    });
+    chrome.storage.sync.set({ options: option_data });
+    chrome.runtime.sendMessage({ type: "updateIcon" });
 }
 
 document.querySelector("#resetcolors").addEventListener("click", function (e) {
     if (confirm("Are you sure you want to reset to default colors?")) {
-        chrome.extension.sendMessage({ verb: "get", noun: ["defaults"] }, function (response) {
+        chrome.runtime.sendMessage({ type: "getDefaultOptions" }, function (response) {
             for (let [key, obj] of Object.entries(response)) {
                 const pieces = key.split("_");
                 let element = document.querySelector(`#${key}`);
@@ -75,13 +72,13 @@ document.querySelector("#resetcolors").addEventListener("click", function (e) {
                 }
             }
             sendOptions();
-        })
+        });
     }
-})
+});
 
 document.querySelector("#resetmemory").addEventListener("click", function (e) {
     if (confirm("Are you sure you want to clear the memory for this extension?")) {
         chrome.storage.sync.clear();
         chrome.storage.local.clear();
     }
-})
+});

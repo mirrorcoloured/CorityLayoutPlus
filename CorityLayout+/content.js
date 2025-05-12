@@ -1,16 +1,20 @@
-console.log("[CorityLayout+] Running injection script");
+console.log("[CorityLayout+] Running content script");
 
 chrome.storage.sync.get((response) => {
     const options = response.options;
     const url = window.location.href;
     if (url.indexOf("layout.rails") > -1) {
         // layout script
-        console.log("[CorityLayout+]", "layoutscript Running...");
-        alert("Layout editor formatting has been deprecated. Please contact author if functionality is needed.");
+        if (options.layout_autorun.value == true) {
+            console.log("[CorityLayout+]", "layoutscript Running...");
+            alert("Layout editor formatting has been deprecated. Please contact author if functionality is needed.");
+        }
     } else if (url.indexOf("display.rails") > -1) {
         // form script
-        console.log("[CorityLayout+]", "formscript Running...");
-        addFormattingToForm(options);
+        if (options.form_autorun.value == true) {
+            console.log("[CorityLayout+]", "formscript Running...");
+            addFormattingToForm();
+        }
     }
 });
 

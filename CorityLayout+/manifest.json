@@ -1,7 +1,7 @@
 {
   "name": "CorityLayout+",
   "description": "Enhance Cority layout editing by making information more visible",
-  "version": "1.6.1",
+  "version": "1.7.1",
   "author": "Sky Chrastina",
   "icons": {
     "16": "icon16.png",
@@ -11,9 +11,10 @@
   },
   "permissions": [
     "activeTab",
-    "storage"
+    "storage",
+    "scripting"
   ],
-  "browser_action": {
+  "action": {
     "default_icon": {
       "16": "icon16.png",
       "32": "icon32.png",
@@ -24,10 +25,8 @@
   },
   "options_page": "options.html",
   "background": {
-    "scripts": [
-      "background.js"
-    ],
-    "persistent": false
+    "service_worker": "background.js",
+    "type": "module"
   },
   "content_scripts": [
     {
@@ -38,10 +37,10 @@
         "https://*.medgate.com/*"
       ],
       "js": [
-        "script.js"
+        "content.js"
       ],
       "run_at": "document_end"
     }
   ],
-  "manifest_version": 2
+  "manifest_version": 3
 }
