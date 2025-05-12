@@ -3,11 +3,11 @@ console.log("[CorityLayout+] Running injection script");
 chrome.storage.sync.get((response) => {
     const options = response.options;
     const url = window.location.href;
-    if (url.indexOf("layout.rails") > -1) {
+    if (url.toLowerCase().indexOf("layout.rails") > -1) {
         // layout script
         console.log("[CorityLayout+]", "layoutscript Running...");
         alert("Layout editor formatting has been deprecated. Please contact author if functionality is needed.");
-    } else if (url.indexOf("display.rails") > -1) {
+    } else if ((url.toLowerCase().indexOf("display.rails") > -1) || (url.toLowerCase().indexOf("new.rails") > -1)) {
         // form script
         console.log("[CorityLayout+]", "formscript Running...");
         addFormattingToForm(options);
